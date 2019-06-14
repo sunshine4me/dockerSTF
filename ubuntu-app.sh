@@ -1,11 +1,22 @@
 #!/bin/bash
 
-read -p "输入本机的IP或你的域名:" hostname
-
+echo "apt update......"
 apt update
 
-#安装docker
-curl -sSL https://get.docker.com/ | sh
+#安装 docker
+echo "检查Docker......"
+docker -v
+if [ $? -eq  0 ]; then
+    echo "检查到Docker已安装!"
+else
+    echo "安装docker环境..."
+    curl -sSL https://get.docker.com/ | sh
+    echo "安装docker环境...安装完成!"
+fi
+
+
+#启动 docker
+service docker start
 
 #拉取必要的image
 docker pull openstf/stf:latest
@@ -17,6 +28,10 @@ mkdir rethinkdb_data
 mkdir storage
 chmod 777 storage
 
+#获取当前目录
+workdir=$(cd $(dirname $0); pwd)
+
+read -p "输入服务使用的IP或域名:" hostname
 
 echo "停止所有容器"
 docker stop $(docker ps -a -q)
@@ -27,17 +42,17 @@ docker rm -v $(docker ps -a -q)
 sleep 1
 
 echo "启动nginx"
-docker run -d  --name nginx -v ./nginx.conf:/etc/nginx/nginx.conf:ro --net host nginx:1.7.10 nginx
+docker run -d  --name nginx -v "${workdir}/nginx.conf:/etc/nginx/nginx.conf:ro" --net host nginx:1.7.10 nginx
 
 
 echo "启动 rethinkdb"
-docker run -d --name some-rethink -v ./rethinkdb_data:/data --net host rethinkdb:2.3 rethinkdb --cache-size 2048 --no-update-check
+docker run -d --name some-rethink -v "${workdir}/rethinkdb_data:/data" --net host rethinkdb:2.3 rethinkdb --cache-size 2048 --no-update-check
 sleep 3
 
 
 # 初始化数据表,只需要执行一次
 echo "rethinkdb init"
-docker run -d --name stf-migrate --net host openstf/stf:latest stf migrate
+docker run --rm --name stf-migrate --net host openstf/stf:latest stf migrate
 sleep 3
 
 echo "启动 stf app"
@@ -65,7 +80,7 @@ docker run -d --name storage-image --net host openstf/stf:latest stf storage-plu
 sleep 1
 
 echo "启动 stf storage-temp"
-docker run -d --name storage-temp --net host -v ./storage:/data openstf/stf:latest stf storage-temp --port 7106 --save-dir /data
+docker run -d --name storage-temp --net host -v "${workdir}/storage:/data" openstf/stf:latest stf storage-temp --port 7106 --save-dir /data
 sleep 1
 
 echo "启动 stf triproxy app"
