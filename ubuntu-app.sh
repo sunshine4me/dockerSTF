@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 echo "apt update......"
 apt update
@@ -15,7 +15,7 @@ else
 fi
 
 
-#启动 docker
+echo "启动 docker"
 service docker start
 
 echo "拉取image"
@@ -31,7 +31,7 @@ chmod 777 storage
 #获取当前目录
 workdir=$(cd $(dirname $0); pwd)
 
-read -p "输入服务使用的IP或域名:" hostname
+read -p "输入服务器的IP:" hostname
 
 echo "停止所有容器"
 docker stop $(docker ps -a -q)
