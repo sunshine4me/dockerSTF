@@ -1,5 +1,12 @@
 #!/bin/bash -e
 
+if [ ! -n "$1" ] ;then
+	hostname="127.0.0.1"
+else
+	hostname="$1"
+fi
+echo "服务IP:${hostname}"
+
 echo "apt update......"
 apt update
 
@@ -30,8 +37,6 @@ chmod 777 storage
 
 #获取当前目录
 workdir=$(cd $(dirname $0); pwd)
-
-read -p "输入服务器的IP:" hostname
 
 echo "停止所有容器"
 docker stop $(docker ps -a -q)
