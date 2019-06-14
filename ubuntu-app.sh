@@ -18,12 +18,12 @@ fi
 #启动 docker
 service docker start
 
-#拉取必要的image
+echo "拉取image"
 docker pull openstf/stf:latest
 docker pull rethinkdb:2.3
 docker pull nginx:1.7.10
 
-#创建必要的文件夹
+echo "创建文件夹"
 mkdir rethinkdb_data
 mkdir storage
 chmod 777 storage
@@ -40,6 +40,9 @@ sleep 1
 echo "删除所有容器"
 docker rm -v $(docker ps -a -q)
 sleep 1
+
+echo "下载nginx配置文件..."
+curl -sSL https://raw.githubusercontent.com/sunshine4me/dockerSTF/master/nginx.conf >> nginx.conf
 
 echo "启动nginx"
 docker run -d  --name nginx -v "${workdir}/nginx.conf:/etc/nginx/nginx.conf:ro" --net host nginx:1.7.10 nginx
