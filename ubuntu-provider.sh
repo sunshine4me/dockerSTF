@@ -8,7 +8,7 @@ fi
 echo "服务IP:${hostname}"
 
 
-apt update
+#apt update
 
 #安装 docker
 echo "检查Docker......"
@@ -27,11 +27,11 @@ docker pull sorccu/adb:latest
 
 
 
-echo "停止所有容器"
+echo "停止provider相关容器"
 docker stop "provider1" "adbd"
 sleep 1
 
-echo "删除所有容器"
+echo "删除provider相关容器"
 docker rm -v "provider1" "adbd"
 sleep 1
 
