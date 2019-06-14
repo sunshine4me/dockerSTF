@@ -8,7 +8,8 @@ fi
 echo "服务IP:${hostname}"
 
 
-#apt update
+echo "apt update......"
+apt update
 
 #安装 docker
 echo "检查Docker......"
