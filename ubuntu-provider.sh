@@ -28,15 +28,16 @@ docker pull sorccu/adb:latest
 
 
 echo "停止所有容器"
-docker stop $(docker ps -a -q)
+docker stop "provider1" "adbd"
 sleep 1
 
 echo "删除所有容器"
-docker rm -v $(docker ps -a -q)
+docker rm -v "provider1" "adbd"
 sleep 1
 
 echo "启动adbd"
 docker run -d --name adbd --privileged -v /dev/bus/usb:/dev/bus/usb --net host sorccu/adb:latest
+sleep 3
 
 echo "启动stf provider"
 docker run -d --name provider1 --net host openstf/stf \
