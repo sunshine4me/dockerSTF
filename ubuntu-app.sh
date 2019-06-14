@@ -38,12 +38,12 @@ chmod 777 storage
 #获取当前目录
 workdir=$(cd $(dirname $0); pwd)
 
-echo "停止所有容器"
-docker stop $(docker ps -a -q)
+echo "停止现有容器"
+docker stop "stf-reaper" "triproxy-dev" "stf-processer" "triproxy-app" "storage-temp" "storage-image" "storage-apk" "stf-api" "websocket" "stf-auth" "stf-app" "some-rethink" "nginx" 
 sleep 1
 
-echo "删除所有容器"
-docker rm -v $(docker ps -a -q)
+echo "删除现有容器"
+docker rm -v "stf-reaper" "triproxy-dev" "stf-processer" "triproxy-app" "storage-temp" "storage-image" "storage-apk" "stf-api" "websocket" "stf-auth" "stf-app" "some-rethink" "nginx" 
 sleep 1
 
 echo "下载nginx配置文件..."
