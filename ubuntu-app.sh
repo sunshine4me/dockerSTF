@@ -72,11 +72,11 @@ docker run -d --name stf-auth --net host -e "SECRET=YOUR_SESSION_SECRET_HERE" op
 sleep 1
 
 echo "启动 stf websocket"
-docker run -d --name websocket --net host -e "SECRET=YOUR_SESSION_SECRET_HERE" openstf/stf:latest stf websocket --port 7102 --storage-url http://${hostname}/ --connect-sub tcp://${hostname}:7150 --connect-push tcp://${hostname}:7170
+docker run -d --name websocket --net host -e "SECRET=YOUR_SESSION_SECRET_HERE" openstf/stf:latest stf websocket --port 7102 --storage-url http://${hostname}/ --connect-sub tcp://127.0.0.1:7150 --connect-push tcp://127.0.0.1:7170
 sleep 1
 
 echo "启动 stf api"
-docker run -d --name stf-api --net host -e "SECRET=YOUR_SESSION_SECRET_HERE" openstf/stf:latest stf api --port 7103 --connect-sub tcp://${hostname}:7150 --connect-push tcp://${hostname}:7170
+docker run -d --name stf-api --net host -e "SECRET=YOUR_SESSION_SECRET_HERE" openstf/stf:latest stf api --port 7103 --connect-sub tcp://127.0.0.1:7150 --connect-push tcp://127.0.0.1:7170
 sleep 1
 
 echo "启动 stf storage-plugin-apk"
